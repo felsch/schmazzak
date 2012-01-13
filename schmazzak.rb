@@ -15,9 +15,9 @@ class Schmazzak
     while !@gameOver
       schmazzakTurn(@mainDeck, @playerHand, @board)
     end
-    puts "You win!" if @playerScore == 21
-    puts "You suck! Your final score is #{@playerScore}." if @playerScore > 21
-    puts "Well, at least you didn't go *over* 21... but not anywhere near it, either. " if @playerScore < 21
+    puts "You win!" if @playerScore == 20
+    puts "You suck! Your final score is #{@playerScore}." if @playerScore > 20
+    puts "Well, at least you didn't go *over* 20... but not anywhere near it, either. " if @playerScore < 20
     puts "The game is over. Thanks for playing."
   end
 
@@ -48,7 +48,7 @@ class Schmazzak
       else
         puts "The player does not want to play a card from his hand."
       end
-      schmazzakTurn(mainDeck, playerHand, board) unless evalScore(board) > 21
+      schmazzakTurn(mainDeck, playerHand, board) unless evalScore(board) > 20
     else 
       puts "The player is done. His final score is #{evalScore(board)}."
     end
