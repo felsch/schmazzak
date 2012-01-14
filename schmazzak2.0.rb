@@ -5,29 +5,47 @@ class Game
     player2 = mkPlayer('2')
     @players = [player1, player2]
     @mainDeck = mkMainDeck
-    @board = Array.new
     puts "--------------"
     puts "A match of Schmazzak between #{@players[0].name} and #{@players[1].name} has begun!"
     game
   end
   
   def game
-    while @players[0].score < 20 && @players[1].score < 20
+    while @players[0].score < 20 && @players[1].score < 20 && !(@players[0].isStanding && @players[1].isStanding)
       puts "--------------"
       puts "A new round has started."
-      gameTurn(@players)
+      gameTurn
     end
+    puts "The game is over!"
     determineWinner
   end
   
-  def gameTurn (playersArray)
-    puts "The next turn has started."
-    
-    playersArray.each do |currentPlayer|
-      # make player turns here
+  def gameTurn
+    @players.each do |currentPlayer|
+      puts "--------------"
+      puts "It's #{currentPlayer.name}'s turn."
+      puts "#{currentPlayer.name}'s board is #{currentPlayer.board}, with a score of #{currentPlayer.score}"
+      if !currentPlayer.isStanding
+        puts "#{currentPlayer.name} draws a #{currentPlayer.board.push(@mainDeck.pop).last} from the main deck."
+        puts "Your board is now #{currentPlayer.board}. Do you want to play a card from your hand? [y/n]"
+        if gets.chomp! == 'y'
+          puts "Your hand is #{currentPlayer.hand}. Which card do you want to play?"
+          chosenCard = gets.chomp!.to_i
+          if currentPlayer.hand.find(chosenCard)
+            currentPlayer.board.push(chosenCard)
+            currentPlayer.hand.delete(chosenCard)
+            puts "#{currentPlayer.name} plays #{chosenCard} from his hand."
+          end
+        end
+        puts "Your score is #{currentPlayer.score}, your remaining hand is #{currentPlayer.hand}."
+        puts "Do you want to stand? (You can not draw or play any more cards once you're standing.) [y/n]"
+          if gets.chomp! == 'y'
+            currentPlayer.isStanding = true
+          end
     end
+  end
     
-    @players[0].score = 20
+    @players[0].score = 20 ## DELETE THIS WHEN DONE
   end
   
   def mkPlayer(val)
@@ -41,20 +59,38 @@ class Game
   
   def determineWinner
     puts "The winner is being determined."
-    # evaluate scores and determine winner here
+    
+    if @players[0].score > 20 && @players[1].score > 20
+      puts "Tie!"
+    end
+    
+    if @players[0].score <=20 && @players[1].score <= 20
+      puts "#{@players[0].name} wins with a score of #{@players[0].score}." if @players[0].score > @players[1].score
+      puts "#{@players[1].name} wins with a score of #{@players[1].score}." if @players[0].score < @players[1].score
+    end
+    
+    if @players[0].score <= 20 && @players[1].score > 20
+      puts "#{@players[0].name} wins with a score of #{@players[0].score}."
+    end
+    
+    if @players[0].score > 20 && @players[1].score <= 20
+      puts "#{@players[1].name} wins with a score of #{@players[1].score}."
+    end
+    
   end
   
 end
 
 class Player
     
-  attr_accessor :hand, :score, :isStanding, :name
+  attr_accessor :hand, :score, :isStanding, :name, :board
   
   def initialize
     @score = 0
     @isStanding = false
     @name = mkName
     @hand = mkHand(mkSideDeck)
+    @board = Array.new
   end
   
   def mkHand (aValidSideDeck)
@@ -88,6 +124,12 @@ class Player
     @name
   end
   
+  def score
+    score = 0
+    @board.each {|element| score+=element  }
+    return score
+  end
+  
 end
 
-puts Game.new.inspect
+Game.new
