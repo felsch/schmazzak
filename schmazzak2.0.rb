@@ -1,3 +1,40 @@
+class Game
+  
+  def initialize
+    @player1 = mkPlayer('1')
+    @player2 = mkPlayer('2')
+    @mainDeck = mkMainDeck
+    @board = Array.new
+    puts "--------------"
+    puts "A match of Schmazzak between #{@player1.name} and #{@player2.name} has begun!"
+    game
+  end
+  
+  def game
+    while @player1.score < 20 && @player2.score < 20
+      puts "--------------"
+      puts "A new round has started."
+      gameTurn(@player1)
+      gameTurn(@player2)
+    end
+    # evaluate scores & determine winner here
+  end
+  
+  def gameTurn (currentPlayer)
+    # make player turns here
+  end
+  
+  def mkPlayer(val)
+    puts "Initializing Player #{val}."
+    Player.new
+  end
+  
+  def mkMainDeck
+    deck = (((Array.new(10)).fill {|i| i=i+1}).*4).shuffle!
+  end
+  
+end
+
 class Player
     
   attr_accessor :hand, :score, :isStanding, :name
@@ -5,8 +42,8 @@ class Player
   def initialize
     @score = 0
     @isStanding = false
-    @hand = mkHand(mkSideDeck)
     @name = mkName
+    @hand = mkHand(mkSideDeck)
   end
   
   def mkHand (aValidSideDeck)
@@ -15,7 +52,7 @@ class Player
   
   def mkSideDeck
     deck = Array.new
-    puts "Select 10 cards with values from -10 to 10, excluding 0, to be in your side deck."
+    puts "#{@name}, select 10 cards with values from -10 to 10, excluding 0, to be in your side deck."
     while deck.length < 10
       userInput = gets.chomp!.to_i
       deck.push(userInput) if verifiedSideDeckCard(userInput)
@@ -36,6 +73,10 @@ class Player
   def mkName
     puts "What is your name?"
     @name = gets.chomp!.capitalize!
+    mkName unless @name
+    @name
   end
   
 end
+
+puts Game.new.inspect
