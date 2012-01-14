@@ -42,10 +42,8 @@ class Game
           if gets.chomp! == 'y'
             currentPlayer.isStanding = true
           end
+      end
     end
-  end
-    
-    @players[0].score = 20 ## DELETE THIS WHEN DONE
   end
   
   def mkPlayer(val)
