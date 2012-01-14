@@ -1,27 +1,33 @@
 class Game
   
   def initialize
-    @player1 = mkPlayer('1')
-    @player2 = mkPlayer('2')
+    player1 = mkPlayer('1')
+    player2 = mkPlayer('2')
+    @players = [player1, player2]
     @mainDeck = mkMainDeck
     @board = Array.new
     puts "--------------"
-    puts "A match of Schmazzak between #{@player1.name} and #{@player2.name} has begun!"
+    puts "A match of Schmazzak between #{@players[0].name} and #{@players[1].name} has begun!"
     game
   end
   
   def game
-    while @player1.score < 20 && @player2.score < 20
+    while @players[0].score < 20 && @players[1].score < 20
       puts "--------------"
       puts "A new round has started."
-      gameTurn(@player1)
-      gameTurn(@player2)
+      gameTurn(@players)
     end
-    # evaluate scores & determine winner here
+    determineWinner
   end
   
-  def gameTurn (currentPlayer)
-    # make player turns here
+  def gameTurn (playersArray)
+    puts "The next turn has started."
+    
+    playersArray.each do |currentPlayer|
+      # make player turns here
+    end
+    
+    @players[0].score = 20
   end
   
   def mkPlayer(val)
@@ -30,7 +36,12 @@ class Game
   end
   
   def mkMainDeck
-    deck = (((Array.new(10)).fill {|i| i=i+1}).*4).shuffle!
+    deck = (((Array.new(10)).fill {|i| i+=1}).*4).shuffle!
+  end
+  
+  def determineWinner
+    puts "The winner is being determined."
+    # evaluate scores and determine winner here
   end
   
 end
